@@ -1,0 +1,142 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+
+        <!--<item name="md_corner_radius">12dp</item>-->
+        <!--<item name="md_font_title">@font/circular</item>-->
+        <!--<item name="md_font_body">@font/circular</item>-->
+        <!--<item name="md_font_button">@font/circular</item>-->
+
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="windowActionBarOverlay">true</item>
+
+
+        <item name="roundSelector">@drawable/round_selector</item>
+        <item name="rectSelector">@drawable/rect_selector</item>
+        <!--<item name="rectSelectorStrong">@drawable/rect_selector_strong</item>-->
+
+        <item name="cardBackgroundColor">@color/md_white_1000</item>
+
+        <!--<item name="defaultFooterColor">@color/md_grey_500</item>-->
+
+        <item name="dividerColor">@color/md_grey_200</item>
+        <item name="iconColor">@color/ate_secondary_text_light</item>
+
+        <item name="toolbarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+
+        <!-- just in case-->
+        <item name="android:windowBackground">@color/md_white_1000</item>
+        <item name="colorAccent">@android:color/black</item>
+        <item name="colorPrimary">@color/md_white_1000</item>
+
+        <!-- necessary to find the overflow button later in the layout-->
+        <item name="android:actionOverflowButtonStyle">@style/Widget.ActionButton.Overflow</item>
+
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+
+        <item name="bottomSheetDialogTheme">@style/BottomSheetDialog</item>
+
+        <item name="android:windowActivityTransitions">true</item>
+        <item name="android:windowExitTransition">@transition/grid_exit</item>
+        <item name="android:windowEnterTransition">@transition/grid_exit</item>
+
+        <item name="android:windowSharedElementEnterTransition">@transition/grid_exit</item>
+        <item name="android:windowSharedElementExitTransition">@transition/grid_exit</item>
+        <item name="android:fontFamily">@font/circular</item>
+    </style>
+
+    <style name="Widget.ActionButton.Overflow" parent="Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:contentDescription">@string/abc_action_menu_overflow_description</item>
+    </style>
+
+    <style name="BottomSheetDialog" parent="Theme.Design.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/BottomSheetStyle</item>
+    </style>
+
+    <style name="BottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="BottomSheetTextAppearance">
+        <item name="android:breakStrategy">simple</item>
+        <item name="android:hyphenationFrequency">none</item>
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Headline6
+        </item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Widget.MaterialProgressBar.ProgressBar.Horizontal" parent="android:Widget.ProgressBar.Horizontal">
+        <!--
+        Disabled for correct behavior on Android 4.x, see
+        https://github.com/android/platform_frameworks_base/commit/911743652b597057a1bd7ef8a921e9ff8dce0f4a#diff-149f45c5ff2d3185bb79688ba17bc432L536
+        <item name="android:progressDrawable">@null</item>
+        -->
+        <item name="android:indeterminateDrawable">@null</item>
+        <item name="android:minHeight">16dp</item>
+        <item name="android:maxHeight">16dp</item>
+    </style>
+
+    <style name="MusicProgressSlider" parent="MusicProgressSliderParent">
+        <item name="android:thumbOffset">0dp</item>
+    </style>
+
+    <style name="MusicProgressSliderParent">
+        <item name="android:progressDrawable">@android:color/transparent</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:thumb">@drawable/slider_thumb</item>
+    </style>
+
+    <style name="Toolbar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">?actionBarSize</item>
+        <item name="popupTheme">?toolbarPopupTheme</item>
+        <item name="android:transitionName" tools:ignore="NewApi">toolbar</item>
+        <item name="android:titleTextAppearance">@style/ToolbarTextAppearance</item>
+        <item name="android:subtitleTextAppearance">@style/ToolbarSubTitleTextAppearance</item>
+        <item name="layout_collapseMode">pin</item>
+        <item name="contentInsetStartWithNavigation">0dp</item>
+        <item name="contentInsetStart">0dp</item>
+        <item name="titleMarginStart">16dp</item>
+    </style>
+
+    <style name="ToolbarTextAppearance">
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/circular</item>
+    </style>
+
+    <style name="ToolbarSubTitleTextAppearance">
+        <item name="android:fontFamily">@font/circular</item>
+    </style>
+
+    <style name="OverFlowButton">
+        <item name="srcCompat">@drawable/ic_more_vert_white_24dp</item>
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:scaleType">center</item>
+        <item name="android:background">?attr/roundSelector</item>
+        <item name="android:focusableInTouchMode">false</item>
+        <item name="android:focusable">false</item>
+    </style>
+
+    <style name="BigTitleTextAppearanceToolbar">
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Headline6
+        </item>
+        <item name="android:fontFamily">@font/circular_std_medium</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="SubTitleTextAppearance">
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Subtitle1
+        </item>
+        <item name="android:layout_gravity">start|center_vertical</item>
+        <item name="android:padding">12dp</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+</resources>
