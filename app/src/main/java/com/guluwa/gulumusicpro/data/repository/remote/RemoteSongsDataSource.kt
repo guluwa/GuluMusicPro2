@@ -22,45 +22,46 @@ import java.util.*
 
 class RemoteSongsDataSource : SongDataSource {
 
-    fun queryNetCloudHotSong(): LiveData<ViewDataBean<List<SongBean>>> {
+    override fun queryNetCloudHotSong(): LiveData<ViewDataBean<List<SongBean>>> {
         val map = HashMap<String, String>()
         map["types"] = "playlist"
         map["id"] = Contacts.NET_CLOUD_HOT_ID
         return fromObservableViewData(
-            RetrofitWorker.retrofitWorker
-                .obtainNetCloudHot(Contacts.SONG_CALLBACK, map)
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.io())
-                .map<List<SongBean>> { result ->
-                    val list = mutableListOf<SongBean>()
-                    if (result.playlist != null && result.playlist!!.tracks != null) {
-                        for (item in result.playlist!!.tracks!!) {
-                            val year = AppUtils.getStrTimeYear(item.publishTime).toInt()
-                            var albumId = 0
-                            var albumName = ""
-                            var albumPic = ""
-                            if (item.al != null) {
-                                albumId = item.al!!.id
-                                albumName = item.al!!.name ?: ""
-                                albumPic = item.al!!.picUrl
+                RetrofitWorker.retrofitWorker
+                        .obtainNetCloudHot(Contacts.SONG_CALLBACK, map)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(Schedulers.io())
+                        .map<List<SongBean>> { result ->
+                            val list = mutableListOf<SongBean>()
+                            if (result.playlist != null && result.playlist!!.tracks != null) {
+                                for (item in result.playlist!!.tracks!!) {
+                                    val year = AppUtils.getStrTimeYear(item.publishTime).toInt()
+                                    var albumId = 0
+                                    var albumName = ""
+                                    var albumPic = ""
+                                    if (item.al != null) {
+                                        albumId = item.al!!.id
+                                        albumName = item.al!!.name ?: ""
+                                        albumPic = item.al!!.picUrl
+                                    }
+                                    var artistId = 0
+                                    var artistName = ""
+                                    if (item.ar != null && item.ar!!.isNotEmpty()) {
+                                        artistId = item.ar!![0].id
+                                        artistName = item.ar!![0].name ?: ""
+                                    }
+                                    list.add(
+                                            SongBean(
+                                                    item.id.toInt(), list.count(), item.name, -1, year, -1,
+                                                    "", item.publishTime, albumId, albumName, albumPic, artistId, artistName
+                                            )
+                                    )
+                                }
                             }
-                            var artistId = 0
-                            var artistName = ""
-                            if (item.ar != null && item.ar!!.isNotEmpty()) {
-                                artistId = item.ar!![0].id
-                                artistName = item.ar!![0].name ?: ""
-                            }
-                            list.add(
-                                SongBean(
-                                    item.id.toInt(), item.name, -1, year, -1,
-                                    "", item.publishTime, albumId, albumName, albumPic, artistId, artistName
-                                )
-                            )
+                            LocalSongsDataSource.getInstance().addSongs(list)
+                            list
                         }
-                    }
-                    list
-                }
-                .observeOn(AndroidSchedulers.mainThread())
+                        .observeOn(AndroidSchedulers.mainThread())
         )
     }
 
@@ -72,22 +73,22 @@ class RemoteSongsDataSource : SongDataSource {
         map["pages"] = freshBean.page.toString()
         map["name"] = freshBean.key
         return fromObservableViewData(
-            RetrofitWorker.retrofitWorker
-                .searchSongByKeyWord(Contacts.SONG_CALLBACK, map)
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.io())
-                .map { searchResultSongBeans ->
-                    for (i in searchResultSongBeans.indices) {
-                        val queryLocalSong = LocalSongsDataSource.getInstance().queryLocalSong(
-                            searchResultSongBeans[i].id, searchResultSongBeans[i].name
-                        )
-                        searchResultSongBeans[i].isDownLoad = queryLocalSong != null
-                    }
-                    LocalSongsDataSource.getInstance()
-                        .addSearchHistory(SearchHistoryBean(AppUtils.getCurrentDate(), freshBean.key))
-                    searchResultSongBeans
-                }
-                .observeOn(AndroidSchedulers.mainThread())
+                RetrofitWorker.retrofitWorker
+                        .searchSongByKeyWord(Contacts.SONG_CALLBACK, map)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(Schedulers.io())
+                        .map { searchResultSongBeans ->
+                            for (i in searchResultSongBeans.indices) {
+                                val queryLocalSong = LocalSongsDataSource.getInstance().queryLocalSong(
+                                        searchResultSongBeans[i].id, searchResultSongBeans[i].name
+                                )
+                                searchResultSongBeans[i].isDownLoad = queryLocalSong != null
+                            }
+                            LocalSongsDataSource.getInstance()
+                                    .addSearchHistory(SearchHistoryBean(AppUtils.getCurrentDate(), freshBean.key))
+                            searchResultSongBeans
+                        }
+                        .observeOn(AndroidSchedulers.mainThread())
         )
     }
 
@@ -103,17 +104,17 @@ class RemoteSongsDataSource : SongDataSource {
         map["id"] = if ("" == song.url_id) song.id else song.url_id
         map["source"] = song.source
         RetrofitWorker.retrofitWorker
-            .obtainSongPath(Contacts.SONG_CALLBACK, map)
-            .subscribeOn(Schedulers.io())
-            .observeOn(Schedulers.io())
-            .map { songPathBean ->
-                songPathBean.song = song
-                songPathBean.id = song.id
-                LocalSongsDataSource.getInstance().addSongPath(songPathBean)
-                songPathBean
-            }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ listener.success(it) }, { listener.failed(it.message!!) })
+                .obtainSongPath(Contacts.SONG_CALLBACK, map)
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
+                .map { songPathBean ->
+                    songPathBean.song = song
+                    songPathBean.id = song.id
+                    LocalSongsDataSource.getInstance().addSongPath(songPathBean)
+                    songPathBean
+                }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ listener.success(it) }, { listener.failed(it.message!!) })
     }
 
     /**
@@ -128,17 +129,17 @@ class RemoteSongsDataSource : SongDataSource {
         map["id"] = if ("" == song.lyric_id) song.id else song.lyric_id
         map["source"] = song.source
         RetrofitWorker.retrofitWorker
-            .obtainSongWord(Contacts.SONG_CALLBACK, map)
-            .subscribeOn(Schedulers.io())
-            .observeOn(Schedulers.io())
-            .map { songWordBean ->
-                songWordBean.song = song
-                songWordBean.id = song.id
-                LocalSongsDataSource.getInstance().addSongWord(songWordBean)
-                songWordBean
-            }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ listener.success(it) }, { listener.failed(it.message!!) })
+                .obtainSongWord(Contacts.SONG_CALLBACK, map)
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
+                .map { songWordBean ->
+                    songWordBean.song = song
+                    songWordBean.id = song.id
+                    LocalSongsDataSource.getInstance().addSongWord(songWordBean)
+                    songWordBean
+                }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ listener.success(it) }, { listener.failed(it.message!!) })
     }
 
     /**
@@ -153,20 +154,20 @@ class RemoteSongsDataSource : SongDataSource {
         map["id"] = if ("" == song.pic_id) song.id else song.pic_id
         map["source"] = song.source
         RetrofitWorker.retrofitWorker
-            .obtainSongPath(Contacts.SONG_CALLBACK, map)
-            .subscribeOn(Schedulers.io())
-            .observeOn(Schedulers.io())
-            .map { songPathBean ->
-                if (LocalSongsDataSource.getInstance().queryLocalSong(song.id, song.name) == null) {
-                    song.al!!.picUrl = songPathBean.url
-                    LocalSongsDataSource.getInstance().addLocalSong(AppUtils.getLocalSongBean(song))
-                } else {
-                    println("歌曲已存在")
+                .obtainSongPath(Contacts.SONG_CALLBACK, map)
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
+                .map { songPathBean ->
+                    if (LocalSongsDataSource.getInstance().queryLocalSong(song.id, song.name) == null) {
+                        song.al!!.picUrl = songPathBean.url
+                        LocalSongsDataSource.getInstance().addLocalSong(AppUtils.getLocalSongBean(song))
+                    } else {
+                        println("歌曲已存在")
+                    }
+                    songPathBean
                 }
-                songPathBean
-            }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ listener.success(it) }, { listener.failed(it.message!!) })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ listener.success(it) }, { listener.failed(it.message!!) })
     }
 
     /**
@@ -178,28 +179,28 @@ class RemoteSongsDataSource : SongDataSource {
      */
     fun downloadSongFile(songPathBean: SongPathBean, songName: String, listener: OnResultListener<File>) {
         RetrofitWorker.retrofitWorker
-            .downloadSongFile(songPathBean.url)
-            .subscribeOn(Schedulers.io())
-            .observeOn(Schedulers.io())
-            .map<ResponseBody> { responseBody ->
-                if (LocalSongsDataSource.getInstance().queryLocalSong(
-                        songPathBean.id,
-                        songPathBean.song!!.name
-                    ) == null
-                ) {
-                    LocalSongsDataSource.getInstance().addLocalSong(AppUtils.getLocalSongBean(songPathBean.song!!))
-                } else {
-                    println("歌曲已存在")
+                .downloadSongFile(songPathBean.url)
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
+                .map<ResponseBody> { responseBody ->
+                    if (LocalSongsDataSource.getInstance().queryLocalSong(
+                                    songPathBean.id,
+                                    songPathBean.song!!.name
+                            ) == null
+                    ) {
+                        LocalSongsDataSource.getInstance().addLocalSong(AppUtils.getLocalSongBean(songPathBean.song!!))
+                    } else {
+                        println("歌曲已存在")
+                    }
+                    responseBody
                 }
-                responseBody
-            }
-            .observeOn(Schedulers.io())
-            .map { responseBody -> AppUtils.writeSong2Disk(responseBody, songName) }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ listener.success(it!!) }, {
-                println(it.message)
-                listener.failed("歌曲下载失败")
-            })
+                .observeOn(Schedulers.io())
+                .map { responseBody -> AppUtils.writeSong2Disk(responseBody, songName) }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ listener.success(it!!) }, {
+                    println(it.message)
+                    listener.failed("歌曲下载失败")
+                })
     }
 
     object SingletonHolder {

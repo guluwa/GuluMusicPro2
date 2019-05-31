@@ -28,6 +28,7 @@ import com.guluwa.gulumusicpro.utils.AppUtils
 import com.guluwa.gulumusicpro.utils.ColorUtil
 import com.guluwa.gulumusicpro.utils.PreferenceUtil
 import com.guluwa.gulumusicpro.utils.interfaces.OnActionListener
+import com.hwangjr.rxbus.RxBus
 
 abstract class BaseActivity : AppCompatActivity(), Runnable {
 
@@ -71,6 +72,8 @@ abstract class BaseActivity : AppCompatActivity(), Runnable {
         hideStatusBar()
         super.onCreate(savedInstanceState)
         mViewDataBinding = DataBindingUtil.setContentView(this, viewLayoutId)
+        //RxBus注册
+        RxBus.get().register(this)
         setImmersiveFullscreen()
         registerSystemUiVisibility()
         initViewModel()
@@ -167,6 +170,7 @@ abstract class BaseActivity : AppCompatActivity(), Runnable {
     }
 
     override fun onDestroy() {
+        RxBus.get().unregister(this)
         super.onDestroy()
         unregisterSystemUiVisibility()
         exitFullscreen()

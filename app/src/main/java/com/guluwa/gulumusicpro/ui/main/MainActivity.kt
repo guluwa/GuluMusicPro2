@@ -1,8 +1,6 @@
 package com.guluwa.gulumusicpro.ui.main
 
-import android.app.Activity
 import android.content.*
-import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.view.View
@@ -19,11 +17,10 @@ import com.guluwa.gulumusicpro.manage.Contacts.QUEUE_CHANGED
 import com.guluwa.gulumusicpro.manage.Contacts.REPEAT_MODE_CHANGED
 import com.guluwa.gulumusicpro.manage.Contacts.SHUFFLE_MODE_CHANGED
 import com.guluwa.gulumusicpro.service.MusicPlayerRemote
-import com.guluwa.gulumusicpro.ui.home.BannerHomeFragment
+import com.guluwa.gulumusicpro.ui.main.home.BannerHomeFragment
+import com.guluwa.gulumusicpro.ui.main.library.LibraryFragment
 import com.guluwa.gulumusicpro.ui.player.MiniPlayerFragment
 import com.guluwa.gulumusicpro.ui.player.normal.PlayerFragment
-import com.guluwa.gulumusicpro.utils.ColorUtil
-import com.guluwa.gulumusicpro.utils.PreferenceUtil
 import com.guluwa.gulumusicpro.utils.interfaces.MainActivityFragmentCallbacks
 import com.guluwa.gulumusicpro.utils.interfaces.MusicServiceEventListener
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
@@ -51,6 +48,11 @@ class MainActivity : BaseActivity(), SlidingUpPanelLayout.PanelSlideListener, Mu
     private lateinit var currentFragment: MainActivityFragmentCallbacks
 
     val panelState: SlidingUpPanelLayout.PanelState? get() = slidingLayout.panelState
+
+    /**
+     * 是否第一次进入
+     */
+    var isFirstComing: Boolean = true
 
     override fun initViews(savedInstanceState: Bundle?) {
         initService()
@@ -176,8 +178,8 @@ class MainActivity : BaseActivity(), SlidingUpPanelLayout.PanelSlideListener, Mu
 
     private fun selectedFragment(itemId: Int) {
         when (itemId) {
-//            R.id.action_playlist,
-//            R.id.action_song -> setCurrentFragment(LibraryFragment.newInstance(itemId), false)
+            R.id.action_playlist,
+            R.id.action_song -> setCurrentFragment(BannerHomeFragment.newInstance(), false)
             R.id.action_home -> setCurrentFragment(BannerHomeFragment.newInstance(), false)
             else -> {
                 setCurrentFragment(BannerHomeFragment.newInstance(), false)

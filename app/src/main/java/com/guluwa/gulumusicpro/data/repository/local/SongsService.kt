@@ -1,6 +1,7 @@
 package com.guluwa.gulumusicpro.data.repository.local
 
 import androidx.lifecycle.LiveData
+import com.guluwa.gulumusicpro.data.bean.remote.neww.SongBean
 import com.guluwa.gulumusicpro.data.bean.remote.old.*
 import io.reactivex.Single
 
@@ -15,7 +16,7 @@ interface SongsService {
      *
      * @return
      */
-    fun queryNetCloudHotSong(): LiveData<List<TracksBean>>
+    fun queryNetCloudHotSong(): LiveData<List<SongBean>>
 
     /**
      * 查询本地歌曲
@@ -54,7 +55,7 @@ interface SongsService {
      *
      * @param songs
      */
-    fun addSongs(songs: List<TracksBean>)
+    fun addSongs(songs: List<SongBean>)
 
     /**
      * 添加歌曲到本地歌曲表

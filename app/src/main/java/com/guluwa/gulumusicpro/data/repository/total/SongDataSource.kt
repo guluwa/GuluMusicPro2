@@ -1,8 +1,11 @@
 package com.guluwa.gulumusicpro.data.repository.total
 
+import androidx.lifecycle.LiveData
+import com.guluwa.gulumusicpro.data.bean.remote.neww.SongBean
 import com.guluwa.gulumusicpro.data.bean.remote.old.SongPathBean
 import com.guluwa.gulumusicpro.data.bean.remote.old.SongWordBean
 import com.guluwa.gulumusicpro.data.bean.remote.old.TracksBean
+import com.guluwa.gulumusicpro.data.bean.remote.old.ViewDataBean
 import com.guluwa.gulumusicpro.utils.interfaces.OnResultListener
 
 /**
@@ -16,7 +19,7 @@ interface SongDataSource {
      *
      * @return
      */
-//    fun queryNetCloudHotSong(): LiveData<ViewDataBean<List<SongBean>>>
+    fun queryNetCloudHotSong(): LiveData<ViewDataBean<List<SongBean>>>
 
     /**
      * 查询歌曲路径(首页)

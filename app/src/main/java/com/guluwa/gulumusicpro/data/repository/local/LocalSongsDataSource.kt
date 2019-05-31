@@ -2,9 +2,11 @@ package com.guluwa.gulumusicpro.data.repository.local
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import com.guluwa.gulumusicpro.data.bean.remote.neww.SongBean
 import com.guluwa.gulumusicpro.data.bean.remote.old.*
 import com.guluwa.gulumusicpro.data.repository.total.SongDataSource
 import com.guluwa.gulumusicpro.utils.interfaces.OnResultListener
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -25,30 +27,19 @@ class LocalSongsDataSource : SongDataSource {
      *
      * @return
      */
-//    override fun queryNetCloudHotSong(): LiveData<ViewDataBean<List<TracksBean>>> {
-//        val data = MediatorLiveData<ViewDataBean<List<TracksBean>>>()
-//        data.value = ViewDataBean.loading()
-//
-//        data.addSource<List<TracksBean>>(songsService.queryNetCloudHotSong()) { tracksBeans ->
-//            if (null == tracksBeans || tracksBeans.isEmpty()) {
-//                data.setValue(ViewDataBean.empty())
-//            } else {
-//                Observable.just("")
-//                        .subscribeOn(Schedulers.io())
-//                        .observeOn(Schedulers.io())
-//                        .map {
-//                            for (i in 0 until tracksBeans.size) {
-//                                if (LocalSongsDataSource.getInstance().queryLocalSong(tracksBeans[i].id, tracksBeans[i].name) != null) {
-//                                    tracksBeans[i].local = true
-//                                }
-//                            }
-//                        }
-//                        .observeOn(AndroidSchedulers.mainThread())
-//                        .subscribe({ data.setValue(ViewDataBean.content(tracksBeans)) })
-//            }
-//        }
-//        return data
-//    }
+    override fun queryNetCloudHotSong(): LiveData<ViewDataBean<List<SongBean>>> {
+        val data = MediatorLiveData<ViewDataBean<List<SongBean>>>()
+        data.value = ViewDataBean.loading()
+
+        data.addSource<List<SongBean>>(songsService.queryNetCloudHotSong()) { tracksBeans ->
+            if (null == tracksBeans || tracksBeans.isEmpty()) {
+                data.setValue(ViewDataBean.empty())
+            } else {
+                data.setValue(ViewDataBean.content(tracksBeans))
+            }
+        }
+        return data
+    }
 
     /**
      * 查询歌曲路径
@@ -119,7 +110,7 @@ class LocalSongsDataSource : SongDataSource {
      *
      * @param songs
      */
-    fun addSongs(songs: List<TracksBean>) {
+    fun addSongs(songs: List<SongBean>) {
         songsService.addSongs(songs)
     }
 

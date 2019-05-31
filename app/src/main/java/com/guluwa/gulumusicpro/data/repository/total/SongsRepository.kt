@@ -1,5 +1,6 @@
 package com.guluwa.gulumusicpro.data.repository.total
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import com.guluwa.gulumusicpro.data.bean.remote.neww.SongBean
 import com.guluwa.gulumusicpro.data.bean.remote.old.*
@@ -32,8 +33,16 @@ class SongsRepository {
      * @param isFirstComing
      * @return
      */
-    fun queryNetCloudHotSong(): LiveData<ViewDataBean<List<SongBean>>> {
-        return remoteSongsDataSource.queryNetCloudHotSong()
+    fun queryNetCloudHotSong(isFirstComing: Boolean): LiveData<ViewDataBean<List<SongBean>>> {
+        Log.e("error", isFirstComing.toString())
+        if (!isFirstComing) {
+            return localSongsDataSource.queryNetCloudHotSong()
+        }
+        return if (AppUtils.isNetConnected) {
+            remoteSongsDataSource.queryNetCloudHotSong()
+        } else {
+            localSongsDataSource.queryNetCloudHotSong()
+        }
     }
 
     /**

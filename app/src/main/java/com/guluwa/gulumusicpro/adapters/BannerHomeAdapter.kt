@@ -1,29 +1,25 @@
 package com.guluwa.gulumusicpro.adapters
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.guluwa.gulumusicpro.R
-import com.guluwa.gulumusicpro.data.bean.remote.Song
+import com.guluwa.gulumusicpro.data.bean.local.PageTipBean
 import com.guluwa.gulumusicpro.data.bean.remote.neww.SongBean
 import com.guluwa.gulumusicpro.manage.MyApplication
-import com.guluwa.gulumusicpro.utils.AppUtils
 import java.util.*
 
 class BannerHomeAdapter(dataSet: ArrayList<Any>) :
         RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    var dataSet: MutableList<Any>
+    var dataSet: MutableList<Any> = dataSet
 
     fun swapData(finalList: List<Any>) {
         dataSet.clear()
@@ -32,17 +28,23 @@ class BannerHomeAdapter(dataSet: ArrayList<Any>) :
         notifyDataSetChanged()
     }
 
-    init {
-        this.dataSet = dataSet
+    fun swapErrorMsg(msg: String) {
+        dataSet.clear()
+        dataSet.add(PageTipBean(msg, 1))
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        if (viewType == 1) {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.item_list, parent, false)
-            return SongViewHolder(view)
-        } else {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.abs_playlists, parent, false)
-            return TopViewHolder(view)
+        return when (viewType) {
+            1 -> {
+                val view = LayoutInflater.from(parent.context).inflate(R.layout.item_list, parent, false)
+                SongViewHolder(view)
+            }
+            2 -> PageStatusViewHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.page_status_item_view, parent, false))
+            else -> {
+                val view = LayoutInflater.from(parent.context).inflate(R.layout.abs_playlists, parent, false)
+                TopViewHolder(view)
+            }
         }
     }
 
@@ -51,7 +53,7 @@ class BannerHomeAdapter(dataSet: ArrayList<Any>) :
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (dataSet[position] is SongBean) 1 else 2
+        return if (dataSet[position] is SongBean) 1 else if (dataSet[position] is PageTipBean) 2 else 3
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -76,12 +78,13 @@ class BannerHomeAdapter(dataSet: ArrayList<Any>) :
             }
 
             if (holder.image != null) {
-                Log.e(TAG, song.title)
                 Glide.with(MyApplication.context)
                         .load(song.albumPic)
                         .apply(RequestOptions().placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher))
                         .into(holder.image!!)
             }
+        } else if (getItemViewType(position) == 2) {
+            (holder as PageStatusViewHolder).mItemBinding.pageTipBean = dataSet[position] as PageTipBean
         }
     }
 

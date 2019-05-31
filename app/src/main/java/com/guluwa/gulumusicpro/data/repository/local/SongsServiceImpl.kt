@@ -1,6 +1,8 @@
 package com.guluwa.gulumusicpro.data.repository.local
 
 import androidx.lifecycle.LiveData
+import com.guluwa.gulumusicpro.data.bean.remote.Song
+import com.guluwa.gulumusicpro.data.bean.remote.neww.SongBean
 import com.guluwa.gulumusicpro.data.bean.remote.old.*
 import com.guluwa.gulumusicpro.data.repository.local.database.DBHelper
 import io.reactivex.Single
@@ -21,7 +23,7 @@ class SongsServiceImpl : SongsService {
      *
      * @return
      */
-    override fun queryNetCloudHotSong(): LiveData<List<TracksBean>> {
+    override fun queryNetCloudHotSong(): LiveData<List<SongBean>> {
         return songsDao.queryNetCloudHotSong()
     }
 
@@ -71,7 +73,7 @@ class SongsServiceImpl : SongsService {
      *
      * @param songs
      */
-    override fun addSongs(songs: List<TracksBean>) {
+    override fun addSongs(songs: List<SongBean>) {
         songsDao.addSongs(songs)
     }
 

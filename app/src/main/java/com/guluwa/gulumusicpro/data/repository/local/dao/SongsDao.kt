@@ -2,6 +2,7 @@ package com.guluwa.gulumusicpro.data.repository.local.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.guluwa.gulumusicpro.data.bean.remote.neww.SongBean
 import com.guluwa.gulumusicpro.data.bean.remote.old.*
 import io.reactivex.Single
 
@@ -18,7 +19,7 @@ interface SongsDao {
      * @return
      */
     @Query("select * from net_cloud_hot_songs order by `index`")
-    fun queryNetCloudHotSong(): LiveData<List<TracksBean>>
+    fun queryNetCloudHotSong(): LiveData<List<SongBean>>
 
     /**
      * 查询本地歌曲
@@ -62,7 +63,7 @@ interface SongsDao {
      * @param songs
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun addSongs(songs: List<TracksBean>)
+    fun addSongs(songs: List<SongBean>)
 
     /**
      * 添加歌曲到本地歌曲表

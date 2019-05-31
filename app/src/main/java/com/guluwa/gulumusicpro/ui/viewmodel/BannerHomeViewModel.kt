@@ -27,7 +27,7 @@ class BannerHomeViewModel : ViewModel() {
             mHotSongListFresh = MutableLiveData()
             mHotSongs = Transformations.switchMap(mHotSongListFresh!!) { input ->
                 if (input.isFresh) {
-                    SongsRepository.getInstance().queryNetCloudHotSong()
+                    SongsRepository.getInstance().queryNetCloudHotSong(input.isFirstComing)
                 } else {
                     null
                 }

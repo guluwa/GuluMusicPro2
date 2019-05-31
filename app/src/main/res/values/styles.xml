@@ -27,8 +27,9 @@
 
         <!-- just in case-->
         <item name="android:windowBackground">@color/md_white_1000</item>
-        <item name="colorAccent">@android:color/black</item>
+        <item name="colorAccent">@color/md_green_A700</item>
         <item name="colorPrimary">@color/md_white_1000</item>
+        <item name="colorPrimaryDark">@color/md_white_1000</item>
 
         <!-- necessary to find the overflow button later in the layout-->
         <item name="android:actionOverflowButtonStyle">@style/Widget.ActionButton.Overflow</item>
